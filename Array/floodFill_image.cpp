@@ -32,55 +32,67 @@ n == image[i].length
 0 <= sc < n 
 
 */
-#include<iostream>
-#include<algorithm>
+#include<bits/stdc++.h>
 using namespace std;
-int m,n;
-int sr,sc;
-int newColor;
-int oldPixel;
-int newPixel;
-void floodFill(int image[190][100],int row,int column){
-        if(row > m-1 || row<0){
-            return;
-        }
 
-        if(column <0 || column> n-1){
-            return;
-        }
+class Solution {
+public:
 
-        if(image[row][column] == oldPixel){
-            image[row][column] = newPixel;
-            floodFill(image,row-1,column);
-            floodFill(image,row+1,column);
-            floodFill(image,row,column-1);
-            floodFill(image,row,column+1);
-        }
+  void findColor(vector<vector<int>>& image,int row,int col,int newColor,int oldColor){
+       
+       if(row<0 || row>=image.size())
+         return;
+       if(col<0||col>=image[0].size())
+         return;
+       
+       
+       if(image[row][col]!=oldColor)
+           return;
+       
+        if(image[row][col]==newColor)
+          return;
+         
+           image[row][col]=newColor;
+           
+         findColor(image,row-1,col,newColor,oldColor);
+         findColor(image,row+1,col,newColor,oldColor);
+         findColor(image,row,col+1,newColor,oldColor);
+         findColor(image,row,col-1,newColor,oldColor);
+       
+      
+   }
+    
+    
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int newColor) {
+        // Code here
+        int oldColor=image[sr][sc];
+       if(newColor==oldColor)
+         return image;
+       findColor(image,sr,sc,newColor,oldColor);
+       return image;
     }
+};
+
+
 int main(){
-    
-    cout<<"Enter number of rows and columns: "<<endl;
-    cin>>m>>n;
-    int image[m][n];
-    cout<<"\nEnter elements in image matrix: \n";
-    for(int i=0;i<m;i++){
-        for(int j=0;j<n;j++)
-         cin>>image[i][j];
-    }
-    
-    cout<<"Enter sr: \n";
-    cin>>sr;
-    cout<<"Enter sc: \n";
-    cin>>sc;
-    
-    oldPixel = image[sr][sc];
+		int n, m;
+		cin >> n >> m;
+		vector<vector<int>>image(n, vector<int>(m,0));
+		for(int i = 0; i < n; i++){
+			for(int j = 0; j < m; j++)
+				cin >> image[i][j];
+		}
+		int sr, sc, newColor;
+		cin >> sr >> sc >> newColor;
+		Solution obj;
+		vector<vector<int>> ans = obj.floodFill(image, sr, sc, newColor);
+		for(auto i: ans){
+			for(auto j: i)
+				cout << j << " ";
+			cout << "\n";
+		}
+	
+	return 0;
+}  
 
-    cout<<"Enter new color"<<endl;
-    cin>>newPixel;
-    floodFill(image,sr,sc);
-    for(int i=0;i<m;i++){
-        for(int j=0;j<n;j++)
-         cout<<image[i][j]<<" ";
-    cout<<endl;
-    }
-}
+  
